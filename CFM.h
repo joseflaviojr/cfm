@@ -43,8 +43,10 @@
  *  junto com CFM. Se não, veja <http://www.gnu.org/licenses/>.
  */
 
-#include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <cstdio>
+#include <cmath>
 #include <fstream>
 
 using namespace std;
