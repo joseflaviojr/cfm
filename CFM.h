@@ -52,7 +52,7 @@
 using namespace std;
 
 int  CFM( int** matrizadj, int total, ofstream* saida );
-long Custo( int** matrizadj, int total );
-void Permutar( int** matriz, int* ordem, int total, int a, int b );
+long Custo( int** matrizadj, int* ordem, int total );
+void Permutar( int* ordem, int total, int a, int b );
 void ImprimirResultado( int* ordem, int total, ostream* saida );
 inline double Sortear( int limiteNaoIncluso );

@@ -63,10 +63,10 @@ int CFM( int** matrizadj, int total, ofstream* saida ) {
 	for( int i = 0; i < total; i++ ) ordem[i] = ordem_melhor[i] = i;
 
 	long custo, custo_novo, custo_melhor;
-	custo = Custo( matrizadj, total );
+	custo = Custo( matrizadj, ordem, total );
 	custo_melhor = custo;
 
-	double temperatura = 600000;
+	double temperatura = 0.0001 * custo;
 	double temperatura_reducao = 0.8;
 	int temperatura_passos = 100;
 
@@ -86,9 +86,9 @@ int CFM( int** matrizadj, int total, ofstream* saida ) {
 		s1 = Sortear(total);
 		s2 = Sortear(total);
 
-		Permutar( matrizadj, ordem, total, s1, s2 );
+		Permutar( ordem, total, s1, s2 );
 
-		custo_novo = Custo( matrizadj, total );
+		custo_novo = Custo( matrizadj, ordem, total );
 
 		if( custo_novo < custo || Sortear(1) <= exp((custo-custo_novo)/temperatura) ){
 			
@@ -106,7 +106,7 @@ int CFM( int** matrizadj, int total, ofstream* saida ) {
 			}
 
 		}else{
-			Permutar( matrizadj, ordem, total, s1, s2 );
+			Permutar( ordem, total, s1, s2 );
 		}
 
 	}
@@ -116,7 +116,7 @@ int CFM( int** matrizadj, int total, ofstream* saida ) {
 }
 
 /* Função Custo do CFM */
-long Custo( int** matrizadj, int total ) {
+long Custo( int** matrizadj, int* ordem, int total ) {
 
 	long custo = 0;
 
@@ -127,16 +127,16 @@ long Custo( int** matrizadj, int total ) {
 		for( j = 0; j < total; j++ ){
 			if( i == j ) continue;
 			valor = 0;
-			if( matrizadj[i][j] ){
-				if( i != ultimo ) valor += 1 - matrizadj[i+1][j];
-				if( j != ultimo ) valor += 1 - matrizadj[i][j+1];
-				if( i != 0 )      valor += 1 - matrizadj[i-1][j];
-				if( j != 0 )      valor += 1 - matrizadj[i][j-1];
+			if( matrizadj[ordem[i]][ordem[j]] ){
+				if( i != ultimo ) valor += 1 - matrizadj[ordem[i+1]][ordem[j  ]];
+				if( j != ultimo ) valor += 1 - matrizadj[ordem[i  ]][ordem[j+1]];
+				if( i != 0 )      valor += 1 - matrizadj[ordem[i-1]][ordem[j  ]];
+				if( j != 0 )      valor += 1 - matrizadj[ordem[i  ]][ordem[j-1]];
 			}else{
-				if( i != ultimo ) valor += matrizadj[i+1][j];
-				if( j != ultimo ) valor += matrizadj[i][j+1];
-				if( i != 0 )      valor += matrizadj[i-1][j];
-				if( j != 0 )      valor += matrizadj[i][j-1];
+				if( i != ultimo ) valor += matrizadj[ordem[i+1]][ordem[j  ]];
+				if( j != ultimo ) valor += matrizadj[ordem[i  ]][ordem[j+1]];
+				if( i != 0 )      valor += matrizadj[ordem[i-1]][ordem[j  ]];
+				if( j != 0 )      valor += matrizadj[ordem[i  ]][ordem[j-1]];
 			}
 			custo += abs(i-j) * valor;
 		}
@@ -147,26 +147,10 @@ long Custo( int** matrizadj, int total ) {
 }
 
 /* Permutação */
-void Permutar( int** matriz, int* ordem, int total, int a, int b ) {
-
-	int i, x;
-
-	for( i = 0; i < total; i++ ){
-		x = matriz[a][i];
-		matriz[a][i] = matriz[b][i];
-		matriz[b][i] = x;
-	}
-
-	for( i = 0; i < total; i++ ){
-		x = matriz[i][a];
-		matriz[i][a] = matriz[i][b];
-		matriz[i][b] = x;
-	}
-
-	x = ordem[a];
+void Permutar( int* ordem, int total, int a, int b ) {
+	int x = ordem[a];
 	ordem[a] = ordem[b];
 	ordem[b] = x;
-
 }
 
 /* Impressão de Resultado */
