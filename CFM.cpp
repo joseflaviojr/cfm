@@ -123,9 +123,8 @@ long Custo( int** matrizadj, int* ordem, int total ) {
 	const int ultimo = total - 1;
 	int i, j, valor;
 
-	for( i = 0; i < total; i++ ){
-		for( j = 0; j < total; j++ ){
-			if( i == j ) continue;
+	for( i = 0; i < ultimo; i++ ){
+		for( j = i+1; j < total; j++ ){
 			valor = 0;
 			if( matrizadj[ordem[i]][ordem[j]] ){
 				if( i != ultimo ) valor += 1 - matrizadj[ordem[i+1]][ordem[j  ]];
